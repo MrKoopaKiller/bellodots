@@ -61,11 +61,10 @@ The key mappings are working for both of them.
 `LeaderKey` + `n`| Move to next tab
 `LeaderKey` + `p`| Move previous tab
 `LeaderKey` + `,`| Rename tab
-`LeaderKey` + `.`| Rename tab
+`LeaderKey` + `.`| Move window
 `LeaderKey` + `$`| Move window
-`LeaderKey` + `C`| New windows
+`LeaderKey` + `C`| New window
 `LeaderKey` + `s`| Show opened windows buffer
-`LeaderKey` + `S`| Move between windows
 `LeaderKey` + `&`| Close window
 `LeaderKey` + `x`| kill tab
 `LeaderKey` + `=`| Show copy buffer
