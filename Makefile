@@ -10,7 +10,7 @@ fonts: clean ## install powerline fonts required for vim and tmux statusbar
 	@/bin/bash $(MAKE_SCRIPT) setup_fonts
 tools: checkdeps ## install all tools using brew and asdf
 	@/bin/bash $(MAKE_SCRIPT) setup_tools
-config: zsh tmux vim git ## copy config files 
+config: tmux vim git zsh ## copy config files 
 zsh: ## configure zsh
 	@/bin/bash $(MAKE_SCRIPT) config_zsh
 tmux: ## configure tmux

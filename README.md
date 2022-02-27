@@ -49,6 +49,10 @@ The key mappings are working for both of them.
 
 **LeaderKey:** `CTRL + S`
 
+To install all plugins run:
+
+`Leaderkey` + `I`
+
 |Key Combination|Result|
 |-|-|
 `LeaderKey` + `-`| Horizontal split

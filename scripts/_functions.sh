@@ -72,22 +72,9 @@ checkdeps() {
 
 setup_fonts() {
   echo -ne "Installing powerline fonts... "
+  set -x
   git clone -q https://github.com/powerline/fonts.git
-  powerline_fonts_dir=$( cd "$( dirname "$0" )" && pwd )
-  find_command="find \"$powerline_fonts_dir\" \( -name '*.[o,t]tf' -or -name '*.pcf.gz' \) -type f -print0"
-
-  if [[ `uname` == 'Darwin' ]]; then
-    font_dir="$HOME/Library/Fonts"
-  else
-    font_dir="$HOME/.fonts"
-    mkdir -p $font_dir
-  fi
-  
-  eval $find_command | xargs -0 -I % cp "%" "$font_dir/"
-
-  if [[ -n `which fc-cache` ]]; then
-    fc-cache -f $font_dir
-  fi
+  ./fonts/install.sh
   echo "Done"
 }
 
@@ -184,7 +171,7 @@ setup_tools() {
 }
 
 config_zsh(){
-  echo -ne "Configuring zsh... "
+  echo "Configuring zsh... "
   cp zsh/zshenv $HOME/.zshenv
   cp zsh/zshrc $HOME/.zshrc
   if [[ ! -f $HOME/.zsh/theme/minimal.zsh ]]; then
@@ -194,7 +181,10 @@ config_zsh(){
     mkdir -p $HOME/.zsh/plugins/zsh-syntax-highlighting
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.zsh/plugins/zsh-syntax-highlighting
   fi
-  echo "Done"
+  echo "#################################"
+  echo -ne "ZSH has been installed.\nTo set zsh as default terminal, use the following command:\n\n"
+  echo -ne "\t chsh -s /bin/zsh\n"
+  echo "#################################"
 }
 
 config_tmux() {
