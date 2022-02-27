@@ -6,7 +6,21 @@ source $HOME/.zshenv
 source $HOME/.zsh/theme/minimal.zsh
 source $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-. $(brew --prefix asdf)/asdf.sh
+if [[ $(uname) == 'Darwin' ]]; then
+  . $(brew --prefix asdf)/asdf.sh
+  BREWBINPATH="$(brew --prefix)/bin"
+  # zinit
+  source $(brew --prefix)/opt/zinit/zinit.zsh
+  # kube-ps1
+  zplugin light jonmosco/kube-ps1
+  PROMPT='$(kube_ps1)'$PROMPT
+  kubeoff
+else
+  . $HOME/.asdf/asdf.sh
+  export PATH="$HOME/.pyenv/bin:$PATH"
+  eval "$(pyenv init --path)"
+  eval "$(pyenv virtualenv-init -)"
+fi
 
 # Enabling menu selection
 zstyle ':completion:*' menu select
@@ -39,8 +53,6 @@ export HISTSIZE=10000000
 export SAVEHIST=10000000
 export HISTFILE=~/.zsh_history
 # }}}
-
-BREWBINPATH="$(brew --prefix)/bin"
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
@@ -125,9 +137,8 @@ export AWS_PAGER=""
 
 # Docker + Minukube {{{
 # https://dhwaneetbhatt.com/blog/run-docker-without-docker-desktop-on-macos
-eval $(minikube docker-env)
+# eval $(minikube docker-env)
 # }}}
-
 
 # BASH Functions {{{
 # Update all git repositories from the current folder.
@@ -149,15 +160,4 @@ git_update_all() {
     echo -e "${GREEN}Done!${NC}"
   done
 }
-
-# ZINIT {{{
-source $(brew --prefix)/opt/zinit/zinit.zsh
-
-# Plugins
-# kube-ps1
-## Show kubernetes current context. 
-## Disable by default. Type kubeon to activate
-zplugin light jonmosco/kube-ps1
-PROMPT='$(kube_ps1)'$PROMPT
-kubeoff
 # }}}

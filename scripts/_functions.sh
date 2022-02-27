@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 # set -x
 
+package_manager=""
+
+_linux_asdf() {
+  # Install asdf required to install packages
+  echo "Installing 'asdf' tool"
+  if [[ ! -d "${HOME}/.asdf" ]]; then
+    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0
+    chmod +x $HOME/.asdf/asdf.sh
+    echo -ne "export PATH=${HOME}/.asdf/bin:$PATH\n" >> $HOME/.bashrc
+  fi
+}
+
 backup() {
   date_dir=$(date "+%F_%H%M%S")
   mkdir -p backup/$date_dir
@@ -30,18 +42,32 @@ cleanall() {
 }
 
 checkdeps() {
-  echo -ne 'Checking for homebrew...'
-  if ! command -v brew > /dev/null; then
-    read -p "[INFO] Dependency not met, you don't have homebrew installed. Install? (y/n) " prompt
-    if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]; then
-      echo "[INFO] Installing Homebrew..."
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    else
-      echo "[ERROR] Dependency not met: homebrew"
-      exit 1
+  echo 'Checking dependencies...'
+  # Linux
+  if [[ $(uname) != 'Darwin' ]]; then
+    # APT
+    if command -v apt > /dev/null; then 
+      sudo apt update ; sudo apt install -y curl git python3-pip
+    fi
+    # YUM
+    if command -v yum > /dev/null; then
+      sudo yum update ; sudo yum install -y curl git python3-pip
+    fi
+    _linux_asdf
+  fi
+  # MacOS
+  if [[ $(uname) == 'Darwin' ]]; then
+    if ! command -v brew > /dev/null; then
+      read -p "[INFO] Dependency not met, you don't have homebrew installed. Install? (y/n) " prompt
+      if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]; then
+        echo "[INFO] Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      else
+        echo "[ERROR] Dependency not met: homebrew"
+        exit 1
+      fi
     fi
   fi
-  echo 'OK'
 }
 
 setup_fonts() {
@@ -50,7 +76,13 @@ setup_fonts() {
   powerline_fonts_dir=$( cd "$( dirname "$0" )" && pwd )
   find_command="find \"$powerline_fonts_dir\" \( -name '*.[o,t]tf' -or -name '*.pcf.gz' \) -type f -print0"
 
-  font_dir="$HOME/Library/Fonts"
+  if [[ `uname` == 'Darwin' ]]; then
+    font_dir="$HOME/Library/Fonts"
+  else
+    font_dir="$HOME/.fonts"
+    mkdir -p $font_dir
+  fi
+  
   eval $find_command | xargs -0 -I % cp "%" "$font_dir/"
 
   if [[ -n `which fc-cache` ]]; then
@@ -72,7 +104,7 @@ setup_tools() {
     'neovim'
     'nodejs'
     'yq'
-    )
+  )
   brew_packages=(
     "ack"
     "asdf"
@@ -87,6 +119,7 @@ setup_tools() {
     "hashicorp/tap/terraform-ls"
     "icdiff"
     "jq"
+    "kube-ps1"
     "macos-trash"
     "nmap"
     "pyenv"
@@ -94,20 +127,55 @@ setup_tools() {
     "stats"
     "warrensbox/tap/tfswitch"
     "tmux"
-    "tree"
     "zinit"
     "zsh"
-    )
+  )
+  linux_packages=(
+    "ack"
+    "awscli"
+    "bat"
+    "exa"
+    "gpa"
+    "gpgv2"
+    "icdiff"
+    "jq"
+    "nmap"
+    "ripgrep"
+    "tmux"
+    "zsh"
+  )
 
-  echo -ne "Installing brew and asdf tools... "
-  eval brew install "${brew_packages[*]}"
-  . $(brew --prefix asdf)/asdf.sh
+  echo -ne "Installing tools... "
+  # MacOS
+  if [[ $(uname) == 'Darwin' ]]; then
+    eval brew install "${brew_packages[*]}"
+    . $(brew --prefix asdf)/asdf.sh
+  else  
+    # Linux
+    for index in "${linux_packages[@]}"; do
+      # APT
+      if command -v apt > /dev/null; then
+        sudo apt install -y $index
+      fi
+      # YUM
+      if command -v apt > /dev/null; then
+        sudo yum install -y $index
+      fi
+    done
+    # Install tfswitch
+    curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh | bash
+    # Install pyenv
+    curl https://pyenv.run | bash  
+  fi
+
+  # Linux + MacOS
   for index in "${asdf_packages[@]}"; do
     if [[ $index == "java" ]]; then
       version="openjdk-17.0.1"
     else 
       version="latest"
     fi
+    export PATH=${HOME}/.asdf/bin:$PATH
     asdf plugin add $index
     asdf install $index $version
     asdf global $index $(asdf list $index)
@@ -116,11 +184,11 @@ setup_tools() {
 }
 
 config_zsh(){
-  echo "Configuring zsh... "
+  echo -ne "Configuring zsh... "
   cp zsh/zshenv $HOME/.zshenv
   cp zsh/zshrc $HOME/.zshrc
   if [[ ! -f $HOME/.zsh/theme/minimal.zsh ]]; then
-    curl -flo /Users/${USER}/.zsh/theme/minimal.zsh --create-dirs https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh
+    curl -flo $HOME/.zsh/theme/minimal.zsh --create-dirs https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh
   fi
   if [[ ! -f $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh ]]; then
     mkdir -p $HOME/.zsh/plugins/zsh-syntax-highlighting
@@ -136,7 +204,7 @@ config_tmux() {
   fi
   cp tmux/tmux.conf $HOME/.tmux.conf
   cp tmux/tmuxline.conf $HOME/.tmuxline.conf
-  echo "OK"
+  echo "Done"
 }
 
 config_vim() {
@@ -150,7 +218,7 @@ config_vim() {
 }
 
 config_git() {
-  echo -ne "Configuring vim... "
+  echo -ne "Configuring git... "
   cp git/gitconfig $HOME/.gitconfig
-  echo -ne "Done"
+  echo "Done"
 }

@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 MAKE_SCRIPT := ./scripts/_make.sh
 
-install: backup checkdep fonts tools config # install and configure everything
+install: checkdeps fonts tools config # install and configure everything
 backup: ## backup current files in backup directory
 	@/bin/bash $(MAKE_SCRIPT) backup	
 checkdeps: ## check dependencies
