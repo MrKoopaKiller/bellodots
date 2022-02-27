@@ -72,7 +72,6 @@ checkdeps() {
 
 setup_fonts() {
   echo -ne "Installing powerline fonts... "
-  set -x
   git clone -q https://github.com/powerline/fonts.git
   ./fonts/install.sh
   echo "Done"
