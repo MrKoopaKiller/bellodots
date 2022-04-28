@@ -161,3 +161,9 @@ git_update_all() {
   done
 }
 # }}}
+
+# for zsh-autosuggestions
+source /opt/homebrew/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh 
+
+# my bin dir
+export PATH=${PATH}:${HOME}/bin

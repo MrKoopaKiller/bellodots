@@ -115,6 +115,7 @@ setup_tools() {
     "tmux"
     "zinit"
     "zsh"
+    "zsh-autosuggestions"
   )
   linux_packages=(
     "ack"
