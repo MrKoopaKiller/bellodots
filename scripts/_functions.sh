@@ -89,6 +89,7 @@ setup_tools() {
     'kubectx'
     'neovim'
     'nodejs'
+    'terragrunt'
     'yq'
   )
   brew_packages=(
