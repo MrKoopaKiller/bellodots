@@ -1,9 +1,7 @@
 [user]
   name = MrKoopaKiller
-  email = nothing@here.com
+  email = ""
   # signingkey = 
-# [gpg]
-  # program = /usr/local/MacGPG2/bin/gpg
 [push]
   default = current
 [fetch]
@@ -60,5 +58,3 @@
   tool = vimdiff
 [help]
   autocorrect = 1
-[github]
-  user = MrKoopaKiller

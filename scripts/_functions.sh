@@ -94,15 +94,22 @@ setup_tools() {
   )
   brew_packages=(
     "ack"
+    "ansible"
     "asdf"
+    "autojump"
     "awscli"
+    "aws-iam-authenticator"
     "bat"
+    "colima"
     "coreutils"
     "curl"
+    "docker"
+    "docker-compose"
     "exa"
     "git"
+    "gitleaks"
     "go"
-    "gpg"
+    "gpg-suite-no-mail"
     "hashicorp/tap/terraform-ls"
     "icdiff"
     "jq"
@@ -111,9 +118,14 @@ setup_tools() {
     "nmap"
     "pyenv"
     "rg"
+    "sl"
+    "shellcheck"
     "stats"
-    "warrensbox/tap/tfswitch"
+    "terraform-docs"
+    "thefuck"
+    "tig"
     "tmux"
+    "warrensbox/tap/tfswitch"
     "zinit"
     "zsh"
     "zsh-autosuggestions"
@@ -166,6 +178,9 @@ setup_tools() {
     export PATH=${HOME}/.asdf/bin:$PATH
     asdf plugin add $index
     asdf install $index $version
+    if [[ $? != 0 ]]; then
+      asdf install $index
+    fi
     asdf global $index $(asdf list $index)
   done
   echo "Done"
