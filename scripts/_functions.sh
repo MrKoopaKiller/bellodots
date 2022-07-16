@@ -143,6 +143,7 @@ setup_tools() {
     "ripgrep"
     "tmux"
     "zsh"
+    "zsh-autosuggestions"
   )
 
   echo -ne "Installing tools... "
@@ -151,7 +152,12 @@ setup_tools() {
     eval brew install "${brew_packages[*]}"
     . $(brew --prefix asdf)/asdf.sh
   else  
-    # Linux
+    ## Linux
+    # Auto-suggestion repo
+    echo 'deb http://download.opensuse.org/repositories/shells:/zsh-users:/zsh-autosuggestions/xUbuntu_21.10/ /' | sudo tee /etc/apt/sources.list.d/shells:zsh-users:zsh-autosuggestions.list
+    curl -fsSL https://download.opensuse.org/repositories/shells:zsh-users:zsh-autosuggestions/xUbuntu_21.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_zsh-users_zsh-autosuggestions.gpg > /dev/null
+    sudo apt update
+
     for index in "${linux_packages[@]}"; do
       # APT
       if command -v apt > /dev/null; then
@@ -227,4 +233,9 @@ config_git() {
   echo -ne "Configuring git... "
   cp git/gitconfig $HOME/.gitconfig
   echo "Done"
+}
+
+wsl2(){
+  echo "Installing fonts package for Windows Terminal..."
+  powershell.exe -ExecutionPolicy Bypass -File fonts/install.ps1
 }

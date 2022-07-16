@@ -19,6 +19,8 @@ vim: ## configure vim
 	@/bin/bash $(MAKE_SCRIPT) config_vim
 git: ## configure git 
 	@/bin/bash $(MAKE_SCRIPT) config_git
+wsl2: ## configure Windows Terminal Fonts
+	@/bin/bash $(MAKE_SCRIPT) wsl2
 
 # === Control functions
 clean: 
@@ -26,7 +28,7 @@ clean:
 cleanall: 
 	@/bin/bash $(MAKE_SCRIPT) cleanall
 
-.PHONY: help backup fonts vim git tmux zsh
+.PHONY: help backup fonts vim git tmux zsh wsl2
 
 help: ## show this message
 	@echo -e "\nUsage: \n"
