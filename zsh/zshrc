@@ -7,16 +7,13 @@ source $HOME/.zsh/theme/minimal.zsh
 source $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 if [[ $(uname) == 'Darwin' ]]; then
-  . $(brew --prefix asdf)/asdf.sh
   BREWBINPATH="$(brew --prefix)/bin"
-  # zinit
-  source $(brew --prefix)/opt/zinit/zinit.zsh
-  # kube-ps1
+  # For zsh auto-suggestions
+  source $(brew --prefix zsh-autosuggestions)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  source $(brew --prefix zinit)/zinit.zsh
   zplugin light jonmosco/kube-ps1
   PROMPT='$(kube_ps1)'$PROMPT
   kubeoff
-  # export GPG_TTY=$(tty)
-  # gpgconf --launch gpg-agent
 else
   . $HOME/.asdf/asdf.sh
   export PATH="$HOME/.pyenv/bin:$PATH"
@@ -85,7 +82,7 @@ alias ls='exa'
 alias ll='exa -Flh --git -a'
 alias lst='exa -T --level 1'
 alias del='trash'
-alias rm='echo -ne "❌ ${Red} This command is not allowed here!\n✅ ${Green} Use ${UGreen}del${NoColor}${Green} instead!\n${NoColor}"'
+alias rm='echo -ne " ❌ ${Red} This command is not allowed here!\n ✅ ${Green} Use ${UGreen}del${NoColor}${Green} instead!\n${NoColor}"'
 alias vim='nvim'
 alias vi='nvim'
 
@@ -170,9 +167,6 @@ git_update_all() {
   done
 }
 # }}}
-
-# for zsh-autosuggestions
-source /opt/homebrew/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # my bin dir
 export PATH=${PATH}:${HOME}/bin
