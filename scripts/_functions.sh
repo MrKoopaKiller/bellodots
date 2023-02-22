@@ -142,6 +142,9 @@ setup_tools() {
     "nmap"
     "ripgrep"
     "tmux"
+    "trash-cli"
+    "xclip"
+    "xsel"
     "zsh"
     "zsh-autosuggestions"
   )
