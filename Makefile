@@ -6,17 +6,17 @@ backup: ## backup current files in backup directory
 	@/bin/bash $(MAKE_SCRIPT) backup	
 checkdeps: ## check dependencies
 	@/bin/bash $(MAKE_SCRIPT) checkdeps
-fonts: clean ## install powerline fonts required for vim and tmux statusbar
+fonts: clean ## install powerline fonts required for nvim and tmux statusbar
 	@/bin/bash $(MAKE_SCRIPT) setup_fonts
 tools: checkdeps ## install all tools using brew and asdf
 	@/bin/bash $(MAKE_SCRIPT) setup_tools
-config: tmux vim git zsh ## copy config files 
-zsh: ## configure zsh
-	@/bin/bash $(MAKE_SCRIPT) config_zsh
+config: tmux nvim git fish ## copy config files 
+fish: ## configure fish
+	@/bin/bash $(MAKE_SCRIPT) config_fish
 tmux: ## configure tmux
 	@/bin/bash $(MAKE_SCRIPT) config_tmux
-vim: ## configure vim
-	@/bin/bash $(MAKE_SCRIPT) config_vim
+nvim: ## configure nvim
+	@/bin/bash $(MAKE_SCRIPT) config_nvim
 git: ## configure git 
 	@/bin/bash $(MAKE_SCRIPT) config_git
 wsl2: ## configure Windows Terminal Fonts
@@ -28,7 +28,7 @@ clean:
 cleanall: 
 	@/bin/bash $(MAKE_SCRIPT) cleanall
 
-.PHONY: help backup fonts vim git tmux zsh wsl2
+.PHONY: help backup fonts nvim git tmux fish wsl2
 
 help: ## show this message
 	@echo -e "\nUsage: \n"

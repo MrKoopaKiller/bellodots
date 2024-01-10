@@ -1,31 +1,14 @@
 #!/usr/bin/env bash
-# set -x
-
-package_manager=""
-
-_linux_asdf() {
-  # Install asdf required to install packages
-  echo "Installing 'asdf' tool"
-  if [[ ! -d "${HOME}/.asdf" ]]; then
-    git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.9.0
-    chmod +x $HOME/.asdf/asdf.sh
-    echo -ne "export PATH=${HOME}/.asdf/bin:$PATH\n" >> $HOME/.bashrc
-  fi
-}
 
 backup() {
   date_dir=$(date "+%F_%H%M%S")
   mkdir -p backup/$date_dir
-  echo -ne "Backuping current files to \"./backup/${date_dir}\"... "
-  zsh_files="$HOME/.zshenv $HOME/.zshrc $HOME/.zsh"
+  echo -ne "Backuping current files to \"$PWD/backup/${date_dir}\"... "
+  fish_files="$HOME/.config/fish/config.fish $HOME/.config/omf"
   tmux_files="$HOME/.tmux.conf $HOME/.tmuxline.conf $HOME/.tmux"
-  vim_files="$HOME/.config/nvim/init.vim $HOME/.vim"
+  vim_files="$HOME/.config/nvim/init.vim"
   git_files="$HOME/.gitconfig"
-  tar czPf ./backup/${date_dir}/zsh_bakup-${date_dir}.tar.gz $zsh_files
-  tar czPf ./backup/${date_dir}/tmux_bakup-${date_dir}.tar.gz $tmux_files
-  tar czPf ./backup/${date_dir}/vim_bakup-${date_dir}.tar.gz $vim_files
-  tar czPf ./backup/${date_dir}/git_bakup-${date_dir}.tar.gz $git_files
-  echo "Done"
+  tar czPf ./backup/${date_dir}/bellodots_backup-${date_dir}.tar.gz $fish_files $tmux_files $nvim_files $git_files
 }
 
 clean() {
@@ -42,7 +25,7 @@ cleanall() {
 }
 
 checkdeps() {
-  echo 'Checking dependencies...'
+  echo "Checking dependencies..."
   # Linux
   if [[ $(uname) != 'Darwin' ]]; then
     # APT
@@ -53,7 +36,6 @@ checkdeps() {
     if command -v yum > /dev/null; then
       sudo yum update ; sudo yum install -y curl git python3-pip
     fi
-    _linux_asdf
   fi
   # MacOS
   if [[ $(uname) == 'Darwin' ]]; then
@@ -62,6 +44,7 @@ checkdeps() {
       if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]; then
         echo "[INFO] Installing Homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
       else
         echo "[ERROR] Dependency not met: homebrew"
         exit 1
@@ -78,89 +61,59 @@ setup_fonts() {
 }
 
 setup_tools() {
-  asdf_packages=(
-    'fzf'
-    'golang'
-    'groovy'
-    'helm'
-    'java'
-    'jsonnet'
-    'kubectl'
-    'kubectx'
-    'neovim'
-    'nodejs'
-    'terragrunt'
-    'yq'
-  )
   brew_packages=(
     "ack"
     "ansible"
-    "asdf"
     "autojump"
     "awscli"
-    "aws-iam-authenticator"
-    "bat"
-    "colima"
     "coreutils"
     "curl"
-    "docker"
     "docker-compose"
-    "exa"
+    "docker"
+    "eza"
+    "fish"
+    "fzf"
     "git"
-    "gitleaks"
-    "go"
     "gpg-suite-no-mail"
-    "hashicorp/tap/terraform-ls"
+    "helm"
     "icdiff"
     "jq"
-    "kube-ps1"
+    "kubectl"
     "macos-trash"
-    "nmap"
+    "neovim"
+    "pipenv"
     "pyenv"
-    "rg"
-    "sl"
-    "shellcheck"
-    "stats"
-    "terraform-docs"
-    "thefuck"
-    "tig"
+    "ripgrep"
+    "tfswitch"
+    "tgswitch"
     "tmux"
-    "warrensbox/tap/tfswitch"
-    "zinit"
-    "zsh"
-    "zsh-autosuggestions"
   )
   linux_packages=(
     "ack"
     "awscli"
-    "bat"
-    "exa"
+    "eza"
+    "fish"
     "gpa"
     "gpgv2"
+    "helm"
     "icdiff"
     "jq"
-    "nmap"
+    "kubectl"
+    "neovim"
     "ripgrep"
     "tmux"
     "trash-cli"
     "xclip"
     "xsel"
-    "zsh"
-    "zsh-autosuggestions"
   )
 
   echo -ne "Installing tools... "
   # MacOS
   if [[ $(uname) == 'Darwin' ]]; then
     eval brew install "${brew_packages[*]}"
-    . $(brew --prefix asdf)/asdf.sh
   else  
     ## Linux
-    # Auto-suggestion repo
-    echo 'deb http://download.opensuse.org/repositories/shells:/zsh-users:/zsh-autosuggestions/xUbuntu_21.10/ /' | sudo tee /etc/apt/sources.list.d/shells:zsh-users:zsh-autosuggestions.list
-    curl -fsSL https://download.opensuse.org/repositories/shells:zsh-users:zsh-autosuggestions/xUbuntu_21.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_zsh-users_zsh-autosuggestions.gpg > /dev/null
     sudo apt update
-
     for index in "${linux_packages[@]}"; do
       # APT
       if command -v apt > /dev/null; then
@@ -174,42 +127,22 @@ setup_tools() {
     # Install tfswitch
     curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh | bash
     # Install pyenv
-    curl https://pyenv.run | bash  
+    curl https://pyenv.run | bash
   fi
-
-  # Linux + MacOS
-  for index in "${asdf_packages[@]}"; do
-    if [[ $index == "java" ]]; then
-      version="openjdk-17.0.1"
-    else 
-      version="latest"
-    fi
-    export PATH=${HOME}/.asdf/bin:$PATH
-    asdf plugin add $index
-    asdf install $index $version
-    if [[ $? != 0 ]]; then
-      asdf install $index
-    fi
-    asdf global $index $(asdf list $index)
-  done
-  echo "Done"
 }
 
-config_zsh(){
-  echo "Configuring zsh... "
-  cp zsh/zshenv $HOME/.zshenv
-  cp zsh/zshrc $HOME/.zshrc
-  if [[ ! -f $HOME/.zsh/theme/minimal.zsh ]]; then
-    curl -flo $HOME/.zsh/theme/minimal.zsh --create-dirs https://raw.githubusercontent.com/subnixr/minimal/master/minimal.zsh
+config_fish(){
+  echo "Configuring fish..."
+  FISH_BIN=$(which fish)
+  cp -f fish/config.fish $HOME/.config/fish/
+  cp -fR fish/omf $HOME/.config/
+  sudo ln -sf $FISH_BIN /usr/local/bin/fish
+  if [[ ! -n $(rg -c fish /etc/shells) ]]; then
+    echo $FISH_BIN | sudo tee -a /etc/shells
   fi
-  if [[ ! -f $HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh ]]; then
-    mkdir -p $HOME/.zsh/plugins/zsh-syntax-highlighting
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.zsh/plugins/zsh-syntax-highlighting
-  fi
-  echo "#################################"
-  echo -ne "ZSH has been installed.\nTo set zsh as default terminal, use the following command:\n\n"
-  echo -ne "\t chsh -s /bin/zsh\n"
-  echo "#################################"
+  chsh -s /usr/local/bin/fish
+  #Get Oh-my-fish
+  curl https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install | fish
 }
 
 config_tmux() {
@@ -222,14 +155,13 @@ config_tmux() {
   echo "Done"
 }
 
-config_vim() {
+config_nvim() {
   echo -ne "Configuring vim... "
   if [[ ! -f $HOME/.local/share/nvim/site/autoload/plug.vim ]]; then
     sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   fi
   mkdir -p ~/.config/nvim && cp vim/nvim.vim $HOME/.config/nvim/init.vim
-  echo "Done"
 }
 
 config_git() {
