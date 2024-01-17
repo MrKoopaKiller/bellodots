@@ -11,6 +11,8 @@ fonts: clean ## install powerline fonts required for nvim and tmux statusbar
 tools: checkdeps ## install all tools using brew and asdf
 	@/bin/bash $(MAKE_SCRIPT) setup_tools
 config: tmux nvim git fish ## copy config files 
+kitty: ## configure kitty
+	@/bin/bash $(MAKE_SCRIPT) config_kitty
 fish: ## configure fish
 	@/bin/bash $(MAKE_SCRIPT) config_fish
 tmux: ## configure tmux
@@ -28,7 +30,7 @@ clean:
 cleanall: 
 	@/bin/bash $(MAKE_SCRIPT) cleanall
 
-.PHONY: help backup fonts nvim git tmux fish wsl2
+.PHONY: help backup fonts tmux kitty fish nvim git wsl2
 
 help: ## show this message
 	@echo -e "\nUsage: \n"

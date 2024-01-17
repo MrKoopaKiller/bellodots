@@ -78,6 +78,7 @@ setup_tools() {
     "helm"
     "icdiff"
     "jq"
+    "kitty"
     "kubectl"
     "macos-trash"
     "neovim"
@@ -98,6 +99,7 @@ setup_tools() {
     "helm"
     "icdiff"
     "jq"
+    "kitty"
     "kubectl"
     "neovim"
     "ripgrep"
@@ -152,7 +154,6 @@ config_tmux() {
   fi
   cp tmux/tmux.conf $HOME/.tmux.conf
   cp tmux/tmuxline.conf $HOME/.tmuxline.conf
-  echo "Done"
 }
 
 config_nvim() {
@@ -162,6 +163,11 @@ config_nvim() {
           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   fi
   mkdir -p ~/.config/nvim && cp vim/nvim.vim $HOME/.config/nvim/init.vim
+}
+
+config_kitty() {
+  echo -ne "Configuring kitty... "
+  cp -f kitty/kitty.conf $HOME/.conf/kitty/.conf
 }
 
 config_git() {

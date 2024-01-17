@@ -61,12 +61,6 @@ nnoremap Y y$
 nnoremap j gj
 nnoremap k gk
 
-" dont use arrow keys :)
-" noremap <Up> <nop>
-" noremap <Down> <nop>
-" noremap <Left> <nop>
-" noremap <Right> <nop>
-
 " tab navigation
 nnoremap <Tab> :tabnext<CR>
 nnoremap <S-Tab> :tabprevious<CR>
@@ -80,12 +74,6 @@ nnoremap <Leader>p "+p
 vnoremap <Leader>p "+p
 nnoremap <Leader>P "+P
 vnoremap <Leader>P "+P
-
-" window navigation
-" nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-" nnoremap <C-l> <C-w>l
 
 " terminal navigation
 tnoremap <Esc> <C-\><C-n>
@@ -124,14 +112,9 @@ Plug 'pearofducks/ansible-vim'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'jodosha/vim-godebug'
 
-" complete and stuff
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
-
 " Function argument completion for Deoplete
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-" Plug 'fszymanski/deoplete-emoji'
 
 " session management
 Plug 'tpope/vim-obsession'
@@ -157,11 +140,6 @@ nmap <silent> <leader>f :FZF<CR>
 nmap <silent> <leader>G :GFiles<CR>
 nmap <silent> <leader>h :Helptags<CR>
 
-" nnoremap <silent> <Leader>f :Files<CR>
-" nnoremap <silent> <Leader>F :Files ~<CR>
-" nnoremap <silent> <Leader>b :Buffers<CR>
-" nnoremap <silent> <Leader>r :Rg 
-
 " NERDTree plugin map key
 map <leader>nt :NERDTreeToggle<CR>
 
@@ -171,7 +149,6 @@ xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
 " Insert mode completion
-" imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
@@ -186,39 +163,6 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 " }}}
-
- " " deoplete {{{
-
- " " Enable deoplete when InsertEnter.
- " let g:deoplete#enable_at_startup = 0
- " autocmd InsertEnter * call deoplete#enable()
- " let g:neosnippet#enable_completed_snippet = 1
-
- " " Plugin key-mappings.
- " " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
- " imap <C-k>     <Plug>(neosnippet_expand_or_jump)
- " smap <C-k>     <Plug>(neosnippet_expand_or_jump)
- " xmap <C-k>     <Plug>(neosnippet_expand_target)
-
- " " For conceal markers.
- " if has('conceal')
- "   set conceallevel=2 concealcursor=niv
- " endif
-
- " " Expand the completed snippet trigger by <CR>.
- " imap <expr><CR>
- "   \ (pumvisible() && neosnippet#expandable()) ?
- "   \ "\<Plug>(neosnippet_expand)" : "\<CR>"
-
- " " SuperTab like snippets behavior.
- " " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
- " imap <expr><TAB>
- "   \ pumvisible() ? "\<C-n>" :
- "   \ neosnippet#expandable_or_jumpable() ?
- "   \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
- " smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
- "   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
- " " }}}
  
  " Golang + vim-go {{{
  let g:go_auto_type_info = 1
