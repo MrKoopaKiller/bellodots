@@ -29,10 +29,19 @@ function fish_user_key_bindings
     bind '$' bind_dollar
 end
 
+function aws-auth
+    set profile $argv[1]
+    set command (echo $argv[2..-1])
+    aws-vault exec $profile -- $command
+end
+
 # Aliases
 alias del='trash'
 alias docker_clean_images='docker rmi $(docker images -a --filter=dangling=true -q)'
 alias docker_clean_ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+alias fgk="flux get kustomizations"
+alias fres="flux resume kustomization"
+alias fsus="flux suspend kustomization"
 alias ga="git add"
 alias gb="git checkout -b"
 alias gc="git clone"
@@ -44,12 +53,18 @@ alias gs="git status"
 alias j="autojump"
 alias k="kubectl"
 alias kaf="kubectl apply -f"
-alias kcx="kubectx"
 alias kd="kubectl describe"
 alias kdel="kubectl delete"
 alias kenv="kubens"
 alias kg="kubectl get"
+alias kgcm="k get cm"
+alias kgi="k get ing"
+alias kgp="k get pods"
+alias kgs="k get svc"
+alias kgse="k get secrets"
 alias kl="kubectl logs"
+alias kns="kubens"
+alias kx="kubectx"
 alias ll='eza -Flh --git -a'
 alias ls='eza'
 alias lst='eza -T --level 1'
@@ -60,7 +75,12 @@ alias tg="terragrunt"
 alias vi="nvim"
 alias vim="nvim"
 
-## Apps custom settings
-
+## Misc. settings
 # autojump
 [ -f /opt/homebrew/share/autojump/autojump.fish ]; source /opt/homebrew/share/autojump/autojump.fish
+# Yubikey + awscli
+set AWS_VAULT_PROMPT ykman
+set AWS_VAULT_KEYCHAIN_NAME login
+# terragrunt
+set TERRAGRUNT_TFPATH terraform
+set PATH $PATH:$HOME/bin

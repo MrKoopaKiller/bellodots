@@ -72,6 +72,7 @@ setup_tools() {
     "docker"
     "eza"
     "fish"
+    "flux"
     "fzf"
     "git"
     "gpg-suite-no-mail"
