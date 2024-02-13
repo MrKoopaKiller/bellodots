@@ -54,10 +54,7 @@ checkdeps() {
 }
 
 setup_fonts() {
-  echo -ne "Installing powerline fonts... "
-  git clone -q https://github.com/powerline/fonts.git
-  ./fonts/install.sh
-  echo "Done"
+  echo -ne "WIP replace for NerdFonts"
 }
 
 setup_tools() {
@@ -92,9 +89,14 @@ setup_tools() {
   )
   linux_packages=(
     "ack"
+    "autojump"
     "awscli"
+    "curl"
+    "docker-compose"
+    "docker"
     "eza"
     "fish"
+    "fzf"
     "gpa"
     "gpgv2"
     "helm"

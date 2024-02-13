@@ -78,9 +78,8 @@ alias vim="nvim"
 ## Misc. settings
 # autojump
 [ -f /opt/homebrew/share/autojump/autojump.fish ]; source /opt/homebrew/share/autojump/autojump.fish
-# Yubikey + awscli
-set AWS_VAULT_PROMPT ykman
-set AWS_VAULT_KEYCHAIN_NAME login
+[ -f /usr/share/autojump/autojump.fish]; source /opt/homebrew/share/autojump/autojump.fish
+
 # terragrunt
-set TERRAGRUNT_TFPATH terraform
-set PATH $PATH:$HOME/bin
+export TERRAGRUNT_TFPATH="terraform"
+export PATH=$PATH:$HOME/bin
