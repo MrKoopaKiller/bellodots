@@ -1,5 +1,8 @@
 # bellodots
 
+> :warning: This project has been deprecated in favor of [dotfile](https://github.com/MrKoopaKiller/dotfiles) and no longer will receive updates.
+
+
 ## Prerequisites
 - [Brew for Mac OSX](http://brew.sh) 
 
