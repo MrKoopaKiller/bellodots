@@ -1,6 +1,6 @@
 # bellodots
 
-> :warning: This project has been deprecated in favor of [dotfile](https://github.com/MrKoopaKiller/dotfiles) and no longer will receive updates.
+> :warning: This project has been deprecated in favor of [dotfiles](https://github.com/MrKoopaKiller/dotfiles) and no longer will receive updates.
 
 
 ## Prerequisites
